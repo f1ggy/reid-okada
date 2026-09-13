@@ -60,7 +60,46 @@ contactForm.addEventListener("submit", (event) => {
   }
 
   const subject = `Hello from ${name}`;
-  const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
-  const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.location.href = mailto;
+  const submitBtn = contactForm.querySelector(".submit-btn");
+  const sentNote = document.getElementById("sent-note");
+  const contactBox = document.querySelector(".contact");
+  submitBtn.disabled = true;
+
+  fetch("https://formsubmit.co/ajax/" + EMAIL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      message,
+      _subject: subject,
+      _captcha: "false",
+      _template: "table",
+    }),
+  })
+    .then(async (res) => {
+      let payload = {};
+      try {
+        payload = await res.json();
+      } catch (parseErr) {
+        payload = { parseFailed: true };
+      }
+      const reply = String(payload.message || "");
+      const needsActivate = /activat/i.test(reply);
+      const blockedFile = /html files|web server/i.test(reply);
+      if (blockedFile || payload.success === "false" || payload.success === false) {
+        if (!needsActivate) {
+          throw new Error(reply || "formsubmit failed");
+        }
+      }
+      contactBox.classList.add("is-sent");
+      sentNote.hidden = false;
+    })
+    .catch(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Try again";
+    });
 });
