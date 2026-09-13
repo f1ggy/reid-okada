@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Reid Okada — web development, real estate technology. Los Angeles, California." />
+    <title>Reid Okada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sheen" aria-hidden="true"></div>
+    <main class="page">
+      <header class="intro">
+        <h1>Reid Okada</h1>
+        <p class="location">Los Angeles, California</p>
+        <p class="focus">web development, real estate technology</p>
+      </header>
+
+      <div class="email-row">
+        <a class="email-link" href="mailto:reid@black.com" id="email-value">reid@black.com</a>
+        <button type="button" class="copy-btn" id="copy-email" aria-label="Copy email address">
+          Copy
+        </button>
+      </div>
+
+      <section class="contact" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Contact</h2>
+        <form id="contact-form" novalidate>
+          <label>
+            Name
+            <input type="text" name="name" id="visitor-name" autocomplete="name" required />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" id="visitor-email" autocomplete="email" required />
+          </label>
+          <label>
+            Message
+            <textarea name="message" id="visitor-message" rows="5" required></textarea>
+          </label>
+          <button type="submit" class="submit-btn">Send</button>
+        </form>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
