@@ -15,7 +15,13 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 const motionButton = document.getElementById('motion-toggle');
-let paused = reducedMotion.matches;
+// A visitor's motion choice survives navigation and reloads. Storage may be
+// unavailable in private or restricted contexts, so motion remains usable.
+function savedMotionPause() {
+  try { return localStorage.getItem('reid-motion-paused') === 'true'; }
+  catch { return false; }
+}
+let paused = reducedMotion.matches || savedMotionPause();
 function setMotionPause(value) {
   paused = value;
   document.body.classList.toggle('motion-paused', paused);
@@ -24,8 +30,12 @@ function setMotionPause(value) {
   motionButton.textContent = paused ? 'Resume motion ▷' : 'Pause motion Ⅱ';
   resetCard();
 }
-motionButton.addEventListener('click', () => setMotionPause(!paused));
-reducedMotion.addEventListener('change', () => setMotionPause(reducedMotion.matches));
+motionButton.addEventListener('click', () => {
+  setMotionPause(!paused);
+  try { localStorage.setItem('reid-motion-paused', String(paused)); }
+  catch { /* The control still works when storage is unavailable. */ }
+});
+reducedMotion.addEventListener('change', () => setMotionPause(reducedMotion.matches || savedMotionPause()));
 
 const card = document.querySelector('.business-card');
 const cardStage = document.querySelector('.card-stage');
