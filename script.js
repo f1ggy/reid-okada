@@ -50,9 +50,9 @@ cardStage.addEventListener('pointerleave', resetCard);
 setMotionPause(paused);
 
 const methodContent = [
-  { label: '01 / INTENT', title: 'Start with the decision.', text: 'Define what needs to be understood, who will use the analysis, and what a useful answer should make possible.' },
-  { label: '02 / ANALYSIS', title: 'Make the information useful.', text: 'Organize inputs, make assumptions explicit, and use AI to support repeatable tasks. Review the output and keep financial judgment at the center.' },
-  { label: '03 / IMPROVEMENT', title: 'Build a better way to work.', text: 'Look for duplicated effort and unclear handoffs. Improve the workflow, document the logic, and refine the process as requirements change.' }
+  { label: '01 / INTENT', title: 'Start with the decision.', output: 'A clear question and a defined decision.', text: 'Define what needs to be understood, who will use the analysis, and what a useful answer should make possible.' },
+  { label: '02 / ANALYSIS', title: 'Make the information useful.', output: 'Structured inputs with explicit assumptions.', text: 'Organize inputs, make assumptions explicit, and use AI to support repeatable tasks. Review the output and keep financial judgment at the center.' },
+  { label: '03 / IMPROVEMENT', title: 'Build a better way to work.', output: 'A documented, repeatable workflow.', text: 'Look for duplicated effort and unclear handoffs. Improve the workflow, document the logic, and refine the process as requirements change.' }
 ];
 const tabs = [...document.querySelectorAll('.method-tabs [role="tab"]')];
 const panel = document.getElementById('method-panel');
@@ -66,6 +66,7 @@ function selectMethod(index, focus = false) {
   panel.querySelector('.panel-number').textContent = content.label;
   panel.querySelector('h3').textContent = content.title;
   panel.querySelector('p').textContent = content.text;
+  panel.querySelector('.method-deliverable strong').textContent = content.output;
   document.querySelectorAll('.map-node').forEach((node, position) => node.classList.toggle('is-active', position === index));
   if (focus) tabs[index].focus();
 }
@@ -124,3 +125,32 @@ if ('IntersectionObserver' in window && !reducedMotion.matches) {
   for (const element of reveals) { element.classList.add('reveal'); observer.observe(element); }
   document.documentElement.classList.add('reveal-ready');
 }
+
+// Mobile navigation remains a normal link list, with predictable focus and dismissal.
+const menuToggle = document.querySelector('.menu-toggle');
+const mainNavigation = document.getElementById('main-navigation');
+function closeMenu(returnFocus = false) {
+  menuToggle.setAttribute('aria-expanded', 'false');
+  document.querySelector('.nav-shell').classList.remove('menu-open');
+  if (returnFocus) menuToggle.focus();
+}
+menuToggle.addEventListener('click', () => {
+  const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+  menuToggle.setAttribute('aria-expanded', String(open));
+  document.querySelector('.nav-shell').classList.toggle('menu-open', open);
+});
+mainNavigation.addEventListener('click', (event) => {
+  if (event.target.closest('a')) closeMenu();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') closeMenu(true);
+});
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.nav-shell')) closeMenu();
+});
+document.querySelector('.nav-shell').addEventListener('focusout', (event) => {
+  if (!event.currentTarget.contains(event.relatedTarget)) closeMenu();
+});
+matchMedia('(max-width: 760px)').addEventListener('change', () => closeMenu());
+
+document.documentElement.classList.add('js-ready');
