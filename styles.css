@@ -148,3 +148,6 @@ body.motion-paused * { animation-play-state: paused!important; }body.motion-paus
 @media(max-width:1272px) { .nav:before { left: -56px; right: -56px; } }
 @media(max-width:760px) { .nav:before { left: -20px; right: -20px; } }
 html.motion-off { scroll-behavior: auto; }
+.nav-shell { position: sticky; top: 0; z-index: 50; background: #f4f1ebf2; backdrop-filter: blur(18px); }
+.nav-shell .nav { position: relative; top: auto; background: transparent; backdrop-filter: none; }
+.nav-shell .nav:before { content: none; }

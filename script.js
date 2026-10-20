@@ -124,4 +124,3 @@ if ('IntersectionObserver' in window && !reducedMotion.matches) {
   for (const element of reveals) { element.classList.add('reveal'); observer.observe(element); }
   document.documentElement.classList.add('reveal-ready');
 }
-
